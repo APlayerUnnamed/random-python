@@ -1,2 +1,9 @@
 # random-python
-SNAKES AHHHHHHHHHH
+
+APlayerUnnamed
+
+A Place I Put Random Programs I Make
+
+
+Why do I hear snakes...
+Ahhh it's a python!!!!!
