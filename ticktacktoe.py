@@ -14,8 +14,10 @@ try:
     import colorama
 except:
     warn = "Warn >> Could not import colorama, is it installed?"
-thef1 = open(f"{os.getcwd()}\\data.sco", "a+")
-thef1.close()
+try:
+    thef1 = open(f"{os.getcwd()}\\data.sco", "x")
+    thef1.close()
+except: pass
 thef = open(f"{os.getcwd()}\\data.sco", "r+")
 highscore = str(thef.readlines()).replace("[", "").replace("]", "").replace("'", "")
 print(highscore)
@@ -211,7 +213,6 @@ def turn(player, theVal, Grid, message=""):
     return Grid
 
 def restart():
-    import subprocess
     import sys
     string = f"{Fore.YELLOW}Restart? (y/n){Fore.RESET}"
     for char in string:
@@ -221,7 +222,8 @@ def restart():
     val = input(f"{Fore.BLUE}\n> {Fore.RESET}")
     if val.lower() == "y":
         thef.close()
-        subprocess.call([sys.executable, os.path.realpath(__file__)] + sys.argv[1:])
+        return
+
     else:
         if val.lower() == "n" or val.lower() == "":
             exit(0)
@@ -269,10 +271,8 @@ def awaitForTitleInput(highScore, grid):
             thef.close()
             os.remove(f"{os.getcwd()}\\data.sco")
             time.sleep(1)
-            import subprocess
-            import sys
             thef.close()
-            subprocess.call([sys.executable, os.path.realpath(__file__)] + sys.argv[1:])
+            keep = False
         if "exec>>" in theIn:
             thef.close()
             val = theIn.replace("exec>>", "")
@@ -281,26 +281,45 @@ def awaitForTitleInput(highScore, grid):
                 print(f"No Error's in {val}")
             except BaseException as e: print("e")
             time.sleep(1)
-            import subprocess
-            import sys
             thef.close()
-            subprocess.call([sys.executable, os.path.realpath(__file__)] + sys.argv[1:])
+            keep = False
         print(theIn)
         string = f"{Fore.BLUE}How to play:\n[1]  [2]  [3]\n\n[4]  [5]  [6]\n\n[7]  [8]  [9]\n\nEach square has a corresponding number. \nPlace your X/O on a square by typing the squares corresponding number. \nRestarting in 3 seconds!\n\n-APlayerUnnamed\n"
         for char in string:
             print(char, end='')
             time.sleep(0.05)
-        import sys
-        import subprocess
         time.sleep(1)
         thef.close()
-        subprocess.call([sys.executable, os.path.realpath(__file__)] + sys.argv[1:])
+        keep = False
     else:
         theVal = list(start())
         loop(theVal, grid)
         print(theIn)
-        time.sleep(20)
 
-print(colorama.ansi.clear_screen())
-print(f"{colorama.Fore.YELLOW}Starting...{colorama.Fore.RESET}")
-awaitForTitleInput(highscore, grid)
+keep = True
+while keep:
+    thef1 = open(f"{os.getcwd()}\\data.sco", "a+")
+    thef1.close()
+    thef = open(f"{os.getcwd()}\\data.sco", "r+")
+    highscore = str(thef.readlines()).replace("[", "").replace("]", "").replace("'", "")
+    print(highscore)
+    if highscore == "":
+        highscore = "None"
+
+    print(f"{colorama.Fore.YELLOW}Defining variables...{colorama.Fore.RESET}")
+
+    size = os.get_terminal_size()
+
+    columns = size.columns
+    lines = size.lines
+
+    Fore = colorama.Fore
+
+    print("-" * int(columns))
+
+    grid = [2, 2, 2, 2, 2, 2, 2, 2, 2] # Grid
+
+    cwd = os.getcwd()
+    print(colorama.ansi.clear_screen())
+    print(f"{colorama.Fore.YELLOW}Starting...{colorama.Fore.RESET}")
+    awaitForTitleInput(highscore, grid)
